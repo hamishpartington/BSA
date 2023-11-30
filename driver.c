@@ -9,11 +9,11 @@ int main(void)
 {
 
    test();
-   //char str[LISTSTRLEN] = "";
+   char str[LISTSTRLEN] = "";
 
    // A NULL BSA has size zero
    assert(bsa_maxindex(NULL)==-1);
-   //assert(!bsa_tostring(NULL, str));
+   assert(!bsa_tostring(NULL, str));
 
    // Initialise
    bsa* b = bsa_init();
@@ -28,8 +28,8 @@ int main(void)
    assert(bsa_set(b, 15, 15));
 
    // // tostring
-   // assert(bsa_tostring(b, str));
-   // assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}")==0);
+   assert(bsa_tostring(b, str));
+   //assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}")==0);
 
    // Get some values tbsa've already been set
    int* p = bsa_get(b, 0);

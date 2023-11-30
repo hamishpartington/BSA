@@ -107,8 +107,35 @@ int* bsa_get(bsa* b, int indx)
 
     int array_index = indx - (b->first_index[rownum]);
 
-    return &(b->p[rownum][array_index]);
-    
+    return &(b->p[rownum][array_index]);    
+}
+
+bool bsa_tostring(bsa* b, char* str)
+{
+    if(!b){
+        return false;
+    }
+
+    int max_index = b->max_index;
+    int rownum = get_rownum(max_index);
+    char buffer[MAXBUFF];
+
+    for(int i = 0; i <= rownum; i++){
+        strcat(str, "{");
+        if(b->elements_exist[i]){
+            for(int j = 0; j < b->array_size[i]; j++){
+                if(j == (b->array_size[i]- 1)){
+                    sprintf(buffer, "[%d]=%d", j, b->p[i][j]);
+                }else{
+                    sprintf(buffer, "[%d]=%d ", j, b->p[i][j]);
+                }  
+                strcat(str, buffer);        
+            }
+        }
+        strcat(str, "}");
+    }
+    printf("%s\n", str);
+    return true;
 }
 
 void test(void)
