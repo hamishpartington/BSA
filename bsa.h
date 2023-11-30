@@ -10,7 +10,7 @@
 
 struct bsa {
     int* p[BSA_ROWS];
-    bool elements_exsit[BSA_ROWS];
+    bool elements_exist[BSA_ROWS];
     int max_index[BSA_ROWS];
 };
 
