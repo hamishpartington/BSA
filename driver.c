@@ -21,7 +21,7 @@ int main(void)
    // assert(bsa_maxindex(b)==-1);
 
    // // Set some values
-   // assert(bsa_set(b, 0, 4));
+   assert(bsa_set(b, 0, 4));
    // assert(bsa_maxindex(b)==0);
    // // Reset existing value
    // assert(bsa_set(b, 0, 0));
