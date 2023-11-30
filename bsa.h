@@ -8,6 +8,12 @@
 
 #define BSA_ROWS 30
 
+struct bsa {
+    int* p[BSA_ROWS];
+    bool elements_exsit[BSA_ROWS];
+    int max_index[BSA_ROWS];
+};
+
 typedef struct bsa bsa;
 
 // Create an empty BSA
