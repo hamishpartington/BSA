@@ -17,7 +17,10 @@ bsa* bsa_init(void)
             b->first_index[i] = (1 << i) - 1;
             b->last_index[i] = (1 << (i+1)) - 2;
         }
-        b->array_size[i] = b->first_index[i] - b->last_index[i] + 1;
+        b->array_size[i] = b->last_index[i] - b->first_index[i] + 1;
+        b->max_index = -1;
+
+        //printf("Row %i: first = %i, last = %i, size = %i\n", i, b->first_index[i], b->last_index[i], b->array_size[i]);
     }
 
     return b;
@@ -55,12 +58,7 @@ bool bsa_set(bsa* b, int indx, int d)
         return false;
     }
 
-    int rownum = -1, indx_cpy = indx+1;
-
-    do{
-        indx_cpy = indx_cpy >> 1;
-        rownum++;
-    } while(indx_cpy > 0);
+    int rownum = get_rownum(indx);
 
     if(!(b->elements_exist[rownum])){
         int size = b->array_size[rownum];
@@ -71,8 +69,38 @@ bool bsa_set(bsa* b, int indx, int d)
 
     b->p[rownum][array_index] = d;
 
+    if(indx > b->max_index){
+        b->max_index = indx;
+    }
+
     return true;
 }
+
+int get_rownum(int indx)
+{
+    int rownum = -1, indx_cpy = indx+1;
+
+    do{
+        indx_cpy = indx_cpy >> 1;
+        rownum++;
+    } while(indx_cpy > 0);
+
+    return rownum;
+}
+
+int bsa_maxindex(bsa* b)
+{
+    if(!b){
+        return -1;
+    }
+
+    return b->max_index;
+}
+
+// int* bsa_get(bsa* b, int indx)
+// {
+
+// }
 
 void test(void)
 {

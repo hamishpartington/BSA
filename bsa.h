@@ -11,7 +11,7 @@
 struct bsa {
     int* p[BSA_ROWS];
     bool elements_exist[BSA_ROWS];
-    int max_index[BSA_ROWS];
+    int max_index;
     int first_index[BSA_ROWS];
     int last_index[BSA_ROWS];
     int array_size[BSA_ROWS];
