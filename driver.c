@@ -31,31 +31,31 @@ int main(void)
    // assert(bsa_tostring(b, str));
    // assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}")==0);
 
-   // // Get some values tbsa've already been set
-   // int* p = bsa_get(b, 0);
-   // assert(p);
-   // assert(*p == 0);
-   // p = bsa_get(b, 15);
-   // assert(p);
-   // assert(*p == 15);
+   // Get some values tbsa've already been set
+   int* p = bsa_get(b, 0);
+   assert(p);
+   assert(*p == 0);
+   p = bsa_get(b, 15);
+   assert(p);
+   assert(*p == 15);
 
    // // Get an unset value 
-   // p = bsa_get(b, 1);
-   // assert(!p);
-   // p = bsa_get(b, 1024);
-   // assert(!p);
+   p = bsa_get(b, 1);
+   assert(!p);
+   p = bsa_get(b, 1024);
+   assert(!p);
 
-   // // 
-   // assert(bsa_set(b, 100, 100));
-   // assert(bsa_maxindex(b)==100);
-   // // Once resized, using a get is OK
-   // p = bsa_get(b, 100);
-   // assert(p);
-   // assert(*p == 100);
-   // // Retest values from BSA before resize
-   // p = bsa_get(b, 15);
-   // assert(p);
-   // assert(*p == 15);
+   // 
+   assert(bsa_set(b, 100, 100));
+   assert(bsa_maxindex(b)==100);
+   // Once resized, using a get is OK
+   p = bsa_get(b, 100);
+   assert(p);
+   assert(*p == 100);
+   // Retest values from BSA before resize
+   p = bsa_get(b, 15);
+   assert(p);
+   assert(*p == 15);
 
    // assert(bsa_tostring(b, str));
    // assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}{}{[100]=100}")==0);

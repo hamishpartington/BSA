@@ -96,11 +96,20 @@ int bsa_maxindex(bsa* b)
 
     return b->max_index;
 }
+// but with calloc vals are set to 0 so how do we know if it was set?
+int* bsa_get(bsa* b, int indx)
+{
+    int rownum = get_rownum(indx);
 
-// int* bsa_get(bsa* b, int indx)
-// {
+    if(!b || !(b->elements_exist[rownum])){
+        return NULL;
+    }
 
-// }
+    int array_index = indx - (b->first_index[rownum]);
+
+    return &(b->p[rownum][array_index]);
+    
+}
 
 void test(void)
 {
