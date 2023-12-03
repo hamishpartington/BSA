@@ -44,6 +44,8 @@ bool bsa_free(bsa* b)
 
     for(int i = 0; i < BSA_ROWS; i++){
         if(b->elements_exist[i]){
+            free(b->p[i]->a);
+            free(b->p[i]->is_assigned);
             free(b->p[i]);
         }
     }
@@ -62,12 +64,21 @@ bool bsa_set(bsa* b, int indx, int d)
 
     if(!(b->elements_exist[rownum])){
         int size = b->array_size[rownum];
-        b->p[rownum] = (int*)neill_calloc(size, sizeof(int));
+        b->p[rownum] = (array*)neill_calloc(1, sizeof(array));
+        b->p[rownum]->a = (int*)neill_calloc(size, sizeof(int));
+        b->p[rownum]->is_assigned = (bool*)neill_calloc(size, sizeof(bool));
+        b->p[rownum]->max_array_index = -1;
         b->elements_exist[rownum] = true;
+        b->p[rownum]->n_assigned = 0;
     }
     int array_index = indx - (b->first_index[rownum]);
 
-    b->p[rownum][array_index] = d;
+    b->p[rownum]->a[array_index] = d;
+    b->p[rownum]->n_assigned++;
+    b->p[rownum]->is_assigned[array_index] = true;
+    if(array_index > b->p[rownum]->max_array_index){
+        b->p[rownum]->max_array_index = array_index;
+    }
 
     if(indx > b->max_index){
         b->max_index = indx;
@@ -107,7 +118,7 @@ int* bsa_get(bsa* b, int indx)
 
     int array_index = indx - (b->first_index[rownum]);
 
-    return &(b->p[rownum][array_index]);    
+    return &(b->p[rownum]->a[array_index]);    
 }
 
 bool bsa_tostring(bsa* b, char* str)
@@ -115,7 +126,8 @@ bool bsa_tostring(bsa* b, char* str)
     if(!b){
         return false;
     }
-
+    //make input string empty
+    strcpy(str, "");
     int max_index = b->max_index;
     int rownum = get_rownum(max_index);
     char buffer[MAXBUFF];
@@ -123,20 +135,31 @@ bool bsa_tostring(bsa* b, char* str)
     for(int i = 0; i <= rownum; i++){
         strcat(str, "{");
         if(b->elements_exist[i]){
-            for(int j = 0; j < b->array_size[i]; j++){
-                if(j == (b->array_size[i]- 1)){
-                    sprintf(buffer, "[%d]=%d", j, b->p[i][j]);
-                }else{
-                    sprintf(buffer, "[%d]=%d ", j, b->p[i][j]);
-                }  
-                strcat(str, buffer);        
+            for(int j = 0; j <= b->p[i]->max_array_index; j++){
+                if(b->p[i]->is_assigned[j]){
+                    if(j == b->p[i]->max_array_index){
+                        sprintf(buffer, "[%d]=%d", (j+b->first_index[i]), 
+                        b->p[i]->a[j]);
+                    }else{
+                        sprintf(buffer, "[%d]=%d ", (j+b->first_index[i]),
+                        b->p[i]->a[j]);
+                    }  
+                    strcat(str, buffer);
+                }
             }
         }
         strcat(str, "}");
     }
-    printf("%s\n", str);
+    //printf("%s\n", str);
     return true;
 }
+
+// Delete element at index indx - forces a shrink
+// if that was the only cell in the row occupied.
+// bool bsa_delete(bsa* b, int indx)
+// {
+
+// }
 
 void test(void)
 {

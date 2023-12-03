@@ -10,7 +10,7 @@
 #define BSA_ROWS 30
 
 struct bsa {
-    int* p[BSA_ROWS];
+    struct array* p[BSA_ROWS];
     bool elements_exist[BSA_ROWS];
     int max_index;
     int first_index[BSA_ROWS];
@@ -18,7 +18,16 @@ struct bsa {
     int array_size[BSA_ROWS];
 };
 
+//array structure
+struct array {
+    int* a;
+    bool* is_assigned;
+    int max_array_index;
+    int n_assigned;
+};
+
 typedef struct bsa bsa;
+typedef struct array array;
 
 // Create an empty BSA
 bsa* bsa_init(void);

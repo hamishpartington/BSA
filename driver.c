@@ -29,7 +29,7 @@ int main(void)
 
    // // tostring
    assert(bsa_tostring(b, str));
-   //assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}")==0);
+   assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}")==0);
 
    // Get some values tbsa've already been set
    int* p = bsa_get(b, 0);
@@ -57,8 +57,8 @@ int main(void)
    assert(p);
    assert(*p == 15);
 
-   // assert(bsa_tostring(b, str));
-   // assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}{}{[100]=100}")==0);
+   assert(bsa_tostring(b, str));
+   assert(strcmp(str, "{[0]=0}{}{}{}{[15]=15}{}{[100]=100}")==0);
 
    // // Let's do some deleting
 
