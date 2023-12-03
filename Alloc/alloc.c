@@ -4,7 +4,7 @@ bsa* bsa_init(void)
 {
     bsa* b;
 
-    b = (bsa*)neill_calloc(1, sizeof(bsa));
+    b = (bsa*)_neill_calloc(1, sizeof(bsa));
 
     for(int i = 0; i < BSA_ROWS; i++){
         b->elements_exist[i] = false;
@@ -26,7 +26,7 @@ bsa* bsa_init(void)
     return b;
 }
 
-void* neill_calloc(int n, size_t size)
+void* _neill_calloc(int n, size_t size)
 {
    void* v = calloc(n, size);
    if(v==NULL){
@@ -44,9 +44,7 @@ bool bsa_free(bsa* b)
 
     for(int i = 0; i < BSA_ROWS; i++){
         if(b->elements_exist[i]){
-            free(b->p[i]->a);
-            free(b->p[i]->is_assigned);
-            free(b->p[i]);
+            _array_free(b->p[i]);
         }
     }
     free(b);
@@ -60,22 +58,24 @@ bool bsa_set(bsa* b, int indx, int d)
         return false;
     }
 
-    int rownum = get_rownum(indx);
+    int rownum = _get_rownum(indx);
 
     if(!(b->elements_exist[rownum])){
         int size = b->array_size[rownum];
-        b->p[rownum] = (array*)neill_calloc(1, sizeof(array));
-        b->p[rownum]->a = (int*)neill_calloc(size, sizeof(int));
-        b->p[rownum]->is_assigned = (bool*)neill_calloc(size, sizeof(bool));
+        b->p[rownum] = (array*)_neill_calloc(1, sizeof(array));
+        b->p[rownum]->a = (int*)_neill_calloc(size, sizeof(int));
+        b->p[rownum]->is_assigned = (bool*)_neill_calloc(size, sizeof(bool));
         b->p[rownum]->max_array_index = -1;
         b->elements_exist[rownum] = true;
         b->p[rownum]->n_assigned = 0;
     }
-    int array_index = indx - (b->first_index[rownum]);
+    int array_index = _get_array_index(indx, b, rownum);
 
     b->p[rownum]->a[array_index] = d;
-    b->p[rownum]->n_assigned++;
-    b->p[rownum]->is_assigned[array_index] = true;
+    if(!b->p[rownum]->is_assigned[array_index]){
+        b->p[rownum]->n_assigned++;
+        b->p[rownum]->is_assigned[array_index] = true;
+    }
     if(array_index > b->p[rownum]->max_array_index){
         b->p[rownum]->max_array_index = array_index;
     }
@@ -87,7 +87,13 @@ bool bsa_set(bsa* b, int indx, int d)
     return true;
 }
 
-int get_rownum(int indx)
+int _get_array_index(int indx, bsa* b, int rownum){
+    int array_index = indx - (b->first_index[rownum]);
+
+    return array_index;
+}
+
+int _get_rownum(int indx)
 {
     int rownum = -1, indx_cpy = indx+1;
 
@@ -104,19 +110,18 @@ int bsa_maxindex(bsa* b)
     if(!b){
         return -1;
     }
-
     return b->max_index;
 }
-// but with calloc vals are set to 0 so how do we know if it was set?
+
 int* bsa_get(bsa* b, int indx)
 {
-    int rownum = get_rownum(indx);
+    int rownum = _get_rownum(indx);
+    int array_index = _get_array_index(indx, b, rownum);
 
-    if(!b || !(b->elements_exist[rownum])){
+    if(!b || !(b->elements_exist[rownum]) ||
+     !b->p[rownum]->is_assigned[array_index]){
         return NULL;
     }
-
-    int array_index = indx - (b->first_index[rownum]);
 
     return &(b->p[rownum]->a[array_index]);    
 }
@@ -129,7 +134,7 @@ bool bsa_tostring(bsa* b, char* str)
     //make input string empty
     strcpy(str, "");
     int max_index = b->max_index;
-    int rownum = get_rownum(max_index);
+    int rownum = _get_rownum(max_index);
     char buffer[MAXBUFF];
 
     for(int i = 0; i <= rownum; i++){
@@ -150,16 +155,89 @@ bool bsa_tostring(bsa* b, char* str)
         }
         strcat(str, "}");
     }
-    //printf("%s\n", str);
+    if(strcmp(str, "{}") == 0){
+        strcpy(str, "");
+    }
+
+    //printf("str = %s\n", str);
     return true;
 }
 
 // Delete element at index indx - forces a shrink
 // if that was the only cell in the row occupied.
-// bool bsa_delete(bsa* b, int indx)
-// {
+bool bsa_delete(bsa* b, int indx)
+{
+    int rownum = _get_rownum(indx);
+    int array_index = _get_array_index(indx, b, rownum);
 
-// }
+    if(!b || !b->p[rownum] || !b->p[rownum]->is_assigned[array_index]){
+        return false;
+    }
+    b->p[rownum]->is_assigned[array_index] = false;
+    b->p[rownum]->n_assigned--;
+
+    bool array_freed = false;
+    if(b->p[rownum]->n_assigned == 0){
+        _array_free(b->p[rownum]);
+        b->elements_exist[rownum] = false;
+        array_freed = true;
+    }
+
+    if(!array_freed){
+        if(array_index == b->p[rownum]->max_array_index){
+            b->p[rownum]->max_array_index = _new_max_array_index(b->p[rownum]);
+        }
+    }
+
+    if(indx == b->max_index){
+        b->max_index = _new_max_bsa_index(b);
+    }
+    return true;
+}
+
+bool _array_free(array* a)
+{
+    if(!a){
+        return false;
+    }
+    free(a->a);
+    free(a->is_assigned);
+    free(a);
+
+    return true;
+}
+
+int _new_max_bsa_index(bsa* b)
+{
+    
+    int max_index = -1;
+    int x;
+
+    for(int i = 0; i < BSA_ROWS; i++){
+        if(b->elements_exist[i]){
+            x = b->p[i]->max_array_index;
+            x += b->first_index[i];
+            if(x > max_index){
+                max_index = x;
+            }
+        }
+    }
+    return max_index;
+}
+
+int _new_max_array_index(array* a)
+{
+    int new_max;
+    bool found = false;
+    
+    for(int i = a->max_array_index; !found; i--){
+        if(a->is_assigned[i]){
+            new_max = i;
+            found = true;
+        }
+    }
+    return new_max;
+}
 
 void test(void)
 {

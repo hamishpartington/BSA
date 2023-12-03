@@ -18,16 +18,7 @@ struct bsa {
     int array_size[BSA_ROWS];
 };
 
-//array structure
-struct array {
-    int* a;
-    bool* is_assigned;
-    int max_array_index;
-    int n_assigned;
-};
-
 typedef struct bsa bsa;
-typedef struct array array;
 
 // Create an empty BSA
 bsa* bsa_init(void);
