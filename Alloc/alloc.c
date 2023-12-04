@@ -239,6 +239,23 @@ int _new_max_array_index(array* a)
     return new_max;
 }
 
+// Allow a user-defined function to be applied to each (valid) value 
+// in the array. The user defined 'func' is passed a pointer to an int,
+// and maintains an accumulator of the result where required.
+void bsa_foreach(void (*func)(int* p, int* n), bsa* b, int* acc)
+{
+    for(int i = 0; i < BSA_ROWS; i++){
+        if(b->elements_exist[i]){
+            for(int j = 0; j <= b->p[i]->max_array_index; j++){
+                if(b->p[i]->is_assigned[j]){
+                    func(&b->p[i]->a[j], acc);
+                }
+            }
+        }
+        
+    }
+}
+
 void test(void)
 {
 

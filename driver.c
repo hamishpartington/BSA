@@ -82,21 +82,21 @@ int main(void)
   
    bsa_free(b);
 
-   // // foreach - use it to compute product of numbers, and also to double each one
-   // b = bsa_init();
-   // bsa_set(b, 1, 1);
-   // bsa_set(b, 2, 2);
-   // bsa_set(b, 3, 3);
-   // int acc = 1;
-   // bsa_foreach(times, b, &acc);
-   // assert(acc==6);
-   // // Double each numbers in array
-   // assert(bsa_tostring(b, str));
-   // assert(strcmp(str, "{}{[1]=1 [2]=2}{[3]=3}")==0);
-   // bsa_foreach(twice, b, &acc);
-   // assert(bsa_tostring(b, str));
-   // assert(strcmp(str, "{}{[1]=2 [2]=4}{[3]=6}")==0);
-   // bsa_free(b);
+   // foreach - use it to compute product of numbers, and also to double each one
+   b = bsa_init();
+   bsa_set(b, 1, 1);
+   bsa_set(b, 2, 2);
+   bsa_set(b, 3, 3);
+   int acc = 1;
+   bsa_foreach(times, b, &acc);
+   assert(acc==6);
+   // Double each numbers in array
+   assert(bsa_tostring(b, str));
+   assert(strcmp(str, "{}{[1]=1 [2]=2}{[3]=3}")==0);
+   bsa_foreach(twice, b, &acc);
+   assert(bsa_tostring(b, str));
+   assert(strcmp(str, "{}{[1]=2 [2]=4}{[3]=6}")==0);
+   bsa_free(b);
 
    return 0;
 }
