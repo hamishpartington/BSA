@@ -128,7 +128,7 @@ int* bsa_get(bsa* b, int indx)
 
 bool bsa_tostring(bsa* b, char* str)
 {
-    if(!b){
+    if(!b || !str){
         return false;
     }
     //make input string empty
@@ -163,8 +163,6 @@ bool bsa_tostring(bsa* b, char* str)
     return true;
 }
 
-// Delete element at index indx - forces a shrink
-// if that was the only cell in the row occupied.
 bool bsa_delete(bsa* b, int indx)
 {
     int rownum = _get_rownum(indx);
@@ -239,9 +237,6 @@ int _new_max_array_index(array* a)
     return new_max;
 }
 
-// Allow a user-defined function to be applied to each (valid) value 
-// in the array. The user defined 'func' is passed a pointer to an int,
-// and maintains an accumulator of the result where required.
 void bsa_foreach(void (*func)(int* p, int* n), bsa* b, int* acc)
 {
     for(int i = 0; i < BSA_ROWS; i++){
@@ -258,5 +253,30 @@ void bsa_foreach(void (*func)(int* p, int* n), bsa* b, int* acc)
 
 void test(void)
 {
+    assert(_get_rownum(0) == 0);
+    assert(_get_rownum(2) == 1);
+    assert(_get_rownum(3) == 2);
+    assert(_get_rownum(14) == 3);
+    assert(_get_rownum(31) == 5);
+    assert(_get_rownum(2046) == 10);
+    assert(_get_rownum(2047) == 11);
+
+    bsa* b = bsa_init();
+
+    assert(_get_array_index(0, b, 0) == 0);
+    assert(_get_array_index(14, b, 3) == 7);
+    assert(_get_array_index(2046, b, 10) == 1023);
+    assert(_get_array_index(64, b, 6) == 1);
+    assert(_get_array_index(8191, b, 13) == 0);
+    assert(_get_array_index(8190, b, 12) == 4095);
+
+    assert(!_array_free(b->p[0]));
+    assert(!_array_free(b->p[13]));
+
+    bsa_set(b, 0, 5);
+    assert(_array_free(b->p[0]));
+    b->elements_exist[0] = false;
+
+    bsa_free(b);
 
 }
