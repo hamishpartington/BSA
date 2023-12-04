@@ -277,6 +277,18 @@ void test(void)
     assert(_array_free(b->p[0]));
     b->elements_exist[0] = false;
 
+    bsa_set(b, 4, 5);
+    assert(_new_max_array_index(b->p[2]) == 1);
+    assert(_new_max_bsa_index(b) == 4);
+    bsa_set(b, 6, 5);
+    assert(_new_max_array_index(b->p[2]) == 3);
+    assert(_new_max_bsa_index(b) == 6);
+    bsa_set(b, 100, 5);
+    assert(_new_max_array_index(b->p[6]) == 37);
+    assert(_new_max_bsa_index(b) == 100);
+    bsa_set(b, 80, 5);
+    assert(_new_max_array_index(b->p[6]) == 37);
+
     bsa_free(b);
 
 }
