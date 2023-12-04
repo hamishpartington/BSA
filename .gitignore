@@ -1,0 +1,7 @@
+# ignore executables
+driverbsa
+fibmemo
+isfactorial
+sieve
+*_s
+*_v

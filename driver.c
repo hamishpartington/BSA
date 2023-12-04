@@ -45,7 +45,6 @@ int main(void)
    p = bsa_get(b, 1024);
    assert(!p);
 
-   // 
    assert(bsa_set(b, 100, 100));
    assert(bsa_maxindex(b)==100);
    // Once resized, using a get is OK
