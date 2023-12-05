@@ -12,15 +12,13 @@ bsa* bsa_init(void)
             b->first_index[i] = i;
         }else if(i == 1){
             b->first_index[i] = i;
-            b->last_index[i] = (1 << (i+1)) - 2;
+            b->last_index[i] = (1 << (i+1)) - LAST_INDX_ADJUST;
         }else{
-            b->first_index[i] = (1 << i) - 1;
-            b->last_index[i] = (1 << (i+1)) - 2;
+            b->first_index[i] = (1 << i) - FIRST_INDX_ADJUST;
+            b->last_index[i] = (1 << (i+1)) - LAST_INDX_ADJUST;
         }
         b->array_size[i] = b->last_index[i] - b->first_index[i] + 1;
-        b->max_index = -1;
-
-        //printf("Row %i: first = %i, last = %i, size = %i\n", i, b->first_index[i], b->last_index[i], b->array_size[i]);
+        b->max_index = NULL_MAX_INDX;
     }
 
     return b;
@@ -62,29 +60,48 @@ bool bsa_set(bsa* b, int indx, int d)
 
     if(!(b->elements_exist[rownum])){
         int size = b->array_size[rownum];
-        b->p[rownum] = (array*)_neill_calloc(1, sizeof(array));
-        b->p[rownum]->a = (int*)_neill_calloc(size, sizeof(int));
-        b->p[rownum]->is_assigned = (bool*)_neill_calloc(size, sizeof(bool));
-        b->p[rownum]->max_array_index = -1;
+        b->p[rownum] = _array_init(size);
         b->elements_exist[rownum] = true;
-        b->p[rownum]->n_assigned = 0;
     }
     int array_index = _get_array_index(indx, b, rownum);
 
-    b->p[rownum]->a[array_index] = d;
-    if(!b->p[rownum]->is_assigned[array_index]){
-        b->p[rownum]->n_assigned++;
-        b->p[rownum]->is_assigned[array_index] = true;
-    }
-    if(array_index > b->p[rownum]->max_array_index){
-        b->p[rownum]->max_array_index = array_index;
-    }
+    _array_set(b->p[rownum], d, array_index);
 
     if(indx > b->max_index){
         b->max_index = indx;
     }
+    return true;
+}
+
+bool _array_set(array* a, int d, int array_index)
+{
+    if(!a){
+        return false;
+    }
+    a->a[array_index] = d;
+
+    if(!a->is_assigned[array_index]){
+        a->n_assigned++;
+        a->is_assigned[array_index] = true;
+    }
+    if(array_index > a->max_array_index){
+        a->max_array_index = array_index;
+    }
 
     return true;
+}
+
+array* _array_init(int size)
+{
+    array* a;
+
+    a = (array*)_neill_calloc(1, sizeof(array));
+    a->a = (int*)_neill_calloc(size, sizeof(int));
+    a->is_assigned = (bool*)_neill_calloc(size, sizeof(bool));
+    a->max_array_index = NULL_MAX_INDX;
+    a->n_assigned = 0;
+
+    return a;
 }
 
 int _get_array_index(int indx, bsa* b, int rownum){
@@ -95,7 +112,7 @@ int _get_array_index(int indx, bsa* b, int rownum){
 
 int _get_rownum(int indx)
 {
-    int rownum = -1, indx_cpy = indx+1;
+    int rownum = -1, indx_cpy = indx+FIRST_INDX_ADJUST;
 
     do{
         indx_cpy = indx_cpy >> 1;
@@ -108,7 +125,7 @@ int _get_rownum(int indx)
 int bsa_maxindex(bsa* b)
 {
     if(!b){
-        return -1;
+        return NULL_MAX_INDX;
     }
     return b->max_index;
 }
@@ -122,7 +139,6 @@ int* bsa_get(bsa* b, int indx)
      !b->p[rownum]->is_assigned[array_index]){
         return NULL;
     }
-
     return &(b->p[rownum]->a[array_index]);    
 }
 
@@ -133,34 +149,37 @@ bool bsa_tostring(bsa* b, char* str)
     }
     //make input string empty
     strcpy(str, "");
-    int max_index = b->max_index;
-    int rownum = _get_rownum(max_index);
-    char buffer[MAXBUFF];
+    int rownum = _get_rownum(b->max_index);
 
     for(int i = 0; i <= rownum; i++){
         strcat(str, "{");
         if(b->elements_exist[i]){
-            for(int j = 0; j <= b->p[i]->max_array_index; j++){
-                if(b->p[i]->is_assigned[j]){
-                    if(j == b->p[i]->max_array_index){
-                        sprintf(buffer, "[%d]=%d", (j+b->first_index[i]), 
-                        b->p[i]->a[j]);
-                    }else{
-                        sprintf(buffer, "[%d]=%d ", (j+b->first_index[i]),
-                        b->p[i]->a[j]);
-                    }  
-                    strcat(str, buffer);
-                }
-            }
+            _concat_to_string(b, str, i);
         }
         strcat(str, "}");
     }
     if(strcmp(str, "{}") == 0){
         strcpy(str, "");
     }
-
-    //printf("str = %s\n", str);
     return true;
+}
+
+void _concat_to_string(bsa* b, char* str, int rownum)
+{
+    char buffer[MAXBUFF];
+
+    for(int i = 0; i <= b->p[rownum]->max_array_index; i++){
+        if(b->p[rownum]->is_assigned[i]){
+            if(i == b->p[rownum]->max_array_index){
+                sprintf(buffer, "[%d]=%d", (i+b->first_index[rownum]), 
+                b->p[rownum]->a[i]);
+            }else{
+                sprintf(buffer, "[%d]=%d ", (i+b->first_index[rownum]),
+                b->p[rownum]->a[i]);
+            }  
+            strcat(str, buffer);
+        }
+    }
 }
 
 bool bsa_delete(bsa* b, int indx)
@@ -181,10 +200,8 @@ bool bsa_delete(bsa* b, int indx)
         array_freed = true;
     }
 
-    if(!array_freed){
-        if(array_index == b->p[rownum]->max_array_index){
-            b->p[rownum]->max_array_index = _new_max_array_index(b->p[rownum]);
-        }
+    if(!array_freed && (array_index == b->p[rownum]->max_array_index)){
+        b->p[rownum]->max_array_index = _new_max_array_index(b->p[rownum]);
     }
 
     if(indx == b->max_index){
@@ -289,6 +306,29 @@ void test(void)
     bsa_set(b, 80, 5);
     assert(_new_max_array_index(b->p[6]) == 37);
 
+    char str[1000] = "";
+    bsa_set(b, 83, 455);
+    _concat_to_string(b, str, 6);
+    assert(strcmp(str, "[80]=5 [83]=455 [100]=5") == 0);
+
+    array* a;
+
+    a = _array_init(4);
+    assert(a);
+    assert(a->max_array_index == NULL_MAX_INDX);
+    assert(a->n_assigned == 0);
+    assert(a->is_assigned);
+    assert(a->a);
+
+    assert(_array_set(a, 55, 3));
+    assert(a->is_assigned[3]);
+    assert(a->max_array_index == 3);
+    assert(a->n_assigned == 1);
+    assert(a->a[3] == 55);
+
+    assert(!_array_set(b->p[28], 100, 100));
+
+    _array_free(a);
     bsa_free(b);
 
 }
