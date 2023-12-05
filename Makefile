@@ -1,5 +1,6 @@
 CC=gcc
-COMMON= -Wall -Wextra -Wfloat-equal -Wpedantic -Wvla -std=c99 #-Werror
+PG= -pg
+COMMON= -Wall -Wextra -Wfloat-equal -Wpedantic -Wvla -std=c99 -Werror
 DEBUG= -g3
 SANITIZE= $(COMMON) -fsanitize=undefined -fsanitize=address $(DEBUG)
 VALGRIND= $(COMMON) $(DEBUG)
@@ -13,6 +14,9 @@ driverbsa_s: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
 driverbsa: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
 	$(CC) driver.c Alloc/alloc.c -o driverbsa -I./Alloc $(PRODUCTION)
 
+driverbsa_prof: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
+	$(CC) $(PG) driver.c Alloc/alloc.c -o driverbsa_prof -I./Alloc $(COMMON)
+
 driverbsa_v: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
 	$(CC) driver.c Alloc/alloc.c -o driverbsa_v -I./Alloc $(VALGRIND)
 
@@ -24,6 +28,9 @@ fibmemo_s: bsa.h Alloc/specific.h Alloc/alloc.c fibmemo.c
 
 isfactorial: bsa.h Alloc/specific.h Alloc/alloc.c isfactorial.c
 	$(CC) isfactorial.c Alloc/alloc.c -o isfactorial -I./Alloc $(PRODUCTION)
+
+isfactorial_prof: bsa.h Alloc/specific.h Alloc/alloc.c isfactorial.c
+	$(CC) $(PG) isfactorial.c Alloc/alloc.c -o isfactorial_prof -I./Alloc $(COMMON)
 
 isfactorial_s: bsa.h Alloc/specific.h Alloc/alloc.c isfactorial.c
 	$(CC) isfactorial.c Alloc/alloc.c -o isfactorial_s -I./Alloc $(SANITIZE)
