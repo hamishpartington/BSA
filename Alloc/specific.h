@@ -7,6 +7,15 @@
 #define LAST_INDX_ADJUST 2
 #define NULL_MAX_INDX -1
 
+struct bsa {
+    struct array* p[BSA_ROWS];
+    bool elements_exist[BSA_ROWS];
+    int max_index;
+    int first_index[BSA_ROWS];
+    int last_index[BSA_ROWS];
+    int array_size[BSA_ROWS];
+};
+
 //array structure
 struct array {
     int* a;
