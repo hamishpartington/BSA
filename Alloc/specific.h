@@ -39,6 +39,8 @@ int _new_max_bsa_index(bsa* b);
 // overall string
 void _concat_to_string(bsa* b, char* str, int rownum);
 
+//sub function to bsa_init: create an empty array
 array* _array_init(int size);
 
+//sub function to bsa_set: set a[array_index] to d;
 bool _array_set(array* a, int d, int array_index);
