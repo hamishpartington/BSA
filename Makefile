@@ -60,7 +60,19 @@ sieve_v: bsa.h Alloc/specific.h Alloc/alloc.c sieve.c
 extfibmemo_s: bsa.h Extension/specific.h Extension/extension.c fibmemo.c
 	$(CC) fibmemo.c Extension/extension.c -o extfibmemo_s -I./Extension $(SANITIZE)
 
-run: driverbsa fibmemo sieve isfactorial # extfibmemo
+extfibmemo: bsa.h Extension/specific.h Extension/extension.c fibmemo.c
+	$(CC) fibmemo.c Extension/extension.c -o extfibmemo -I./Extension $(PRODUCTION)
+
+extsieve: bsa.h Extension/specific.h Extension/extension.c sieve.c
+	$(CC) sieve.c Extension/extension.c -o extsieve -I./Extension $(PRODUCTION)
+
+extsieve_s: bsa.h Extension/specific.h Extension/extension.c sieve.c
+	$(CC) sieve.c Extension/extension.c -o extsieve_s -I./Extension $(SANITIZE)
+
+extisfactorial: bsa.h Extension/specific.h Extension/extension.c isfactorial.c
+	$(CC) isfactorial.c Extension/extension.c -o extisfactorial -I./Extension $(PRODUCTION)
+
+run: driverbsa fibmemo sieve isfactorial extfibmemo
 	./driverbsa
 	./isfactorial
 	./fibmemo

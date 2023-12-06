@@ -13,7 +13,6 @@ struct bsa {
     int max_index;
     int first_index[BSA_ROWS];
     int last_index[BSA_ROWS];
-    int array_size[BSA_ROWS];
 };
 
 //struct with tree_metadata and pointer to top of tree
@@ -39,4 +38,24 @@ void* _neill_calloc(int n, size_t size);
 bool _tree_meta_free(tree_meta* tm);
 
 bool _tree_free(tree* t);
+
+//return row number of pointer which points to the array which contains index
+int _get_rownum(int indx);
+
+//return index of array which holds indx
+int _get_array_index(int indx, bsa* b, int rownum);
+
+tree_meta* _tree_init(void);
+
+tree* _tree_set(tree* t, int d, int array_index, int* n_assigned);
+
+int* _tree_get(tree* t, int array_index);
+
+tree* _tree_delete(tree* t, int array_index, bool *deleted);
+
+int _new_max_array_index(tree* t);
+
+int _new_max_bsa_index(bsa* b);
+
+void _tree_foreach(void (*func)(int* p, int* n), tree* t, int* acc);
 

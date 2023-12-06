@@ -104,7 +104,8 @@ array* _array_init(int size)
     return a;
 }
 
-int _get_array_index(int indx, bsa* b, int rownum){
+int _get_array_index(int indx, bsa* b, int rownum)
+{
     int array_index = indx - (b->first_index[rownum]);
 
     return array_index;
@@ -226,15 +227,11 @@ int _new_max_bsa_index(bsa* b)
 {
     
     int max_index = -1;
-    int x;
 
-    for(int i = 0; i < BSA_ROWS; i++){
+    for(int i = BSA_ROWS-1; i >= 0 && max_index == -1; i--){
         if(b->elements_exist[i]){
-            x = b->p[i]->max_array_index;
-            x += b->first_index[i];
-            if(x > max_index){
-                max_index = x;
-            }
+            max_index = b->p[i]->max_array_index;
+            max_index += b->first_index[i];
         }
     }
     return max_index;
