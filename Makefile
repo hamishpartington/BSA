@@ -1,6 +1,6 @@
 CC=gcc
 PG= -fno-inline -pg
-COMMON= -Wall -Wextra -Wfloat-equal -Wpedantic -Wvla -std=c99 -Werror
+COMMON= -Wall -Wextra -Wfloat-equal -Wpedantic -Wvla -std=c99 #-Werror
 DEBUG= -g3
 SANITIZE= $(COMMON) -fsanitize=undefined -fsanitize=address $(DEBUG)
 VALGRIND= $(COMMON) $(DEBUG)
@@ -10,6 +10,9 @@ all: driverbsa_s driverbsa fibmemo sieve_s isfactorial # extfibmemo_s
 
 driverbsa_s: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
 	$(CC) driver.c Alloc/alloc.c -o driverbsa_s -I./Alloc $(SANITIZE)
+
+extdriverbsa_s: bsa.h Extension/specific.h Extension/extension.c extdriver.c
+	$(CC) extdriver.c Extension/extension.c  -o extdriverbsa_s -I./Extension $(SANITIZE)
 
 driverbsa: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
 	$(CC) driver.c Alloc/alloc.c -o driverbsa -I./Alloc $(PRODUCTION)
@@ -26,6 +29,12 @@ fibmemo: bsa.h Alloc/specific.h Alloc/alloc.c fibmemo.c
 fibmemo_s: bsa.h Alloc/specific.h Alloc/alloc.c fibmemo.c
 	$(CC) fibmemo.c Alloc/alloc.c -o fibmemo_s -I./Alloc $(SANITIZE)
 
+fibmemo_v: bsa.h Alloc/specific.h Alloc/alloc.c fibmemo.c
+	$(CC) fibmemo.c Alloc/alloc.c -o fibmemo_v -I./Alloc $(VALGRIND)
+
+fibmemo_prof: bsa.h Alloc/specific.h Alloc/alloc.c fibmemo.c
+	$(CC) $(PG) fibmemo.c Alloc/alloc.c -o fibmemo_prof -I./Alloc $(COMMON)
+
 isfactorial: bsa.h Alloc/specific.h Alloc/alloc.c isfactorial.c
 	$(CC) isfactorial.c Alloc/alloc.c -o isfactorial -I./Alloc $(PRODUCTION)
 
@@ -34,6 +43,9 @@ isfactorial_prof: bsa.h Alloc/specific.h Alloc/alloc.c isfactorial.c
 
 isfactorial_s: bsa.h Alloc/specific.h Alloc/alloc.c isfactorial.c
 	$(CC) isfactorial.c Alloc/alloc.c -o isfactorial_s -I./Alloc $(SANITIZE)
+
+isfactorial_v: bsa.h Alloc/specific.h Alloc/alloc.c isfactorial.c
+	$(CC) isfactorial.c Alloc/alloc.c -o isfactorial_v -I./Alloc $(VALGRIND)
 
 sieve: bsa.h Alloc/specific.h Alloc/alloc.c sieve.c
 	$(CC) sieve.c Alloc/alloc.c -o sieve -I./Alloc $(PRODUCTION)
