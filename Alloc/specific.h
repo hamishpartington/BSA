@@ -3,6 +3,18 @@
 #include "../bsa.h"
 
 #define MAXBUFF 20
+#define FIRST_INDX_ADJUST 1
+#define LAST_INDX_ADJUST 2
+#define NULL_MAX_INDX -1
+
+struct bsa {
+    struct array* p[BSA_ROWS];
+    bool elements_exist[BSA_ROWS];
+    int max_index;
+    int first_index[BSA_ROWS];
+    int last_index[BSA_ROWS];
+    int array_size[BSA_ROWS];
+};
 
 //array structure
 struct array {
@@ -31,3 +43,13 @@ int _new_max_array_index(array* a);
 
 // returns new max bsa index for use when previous max is deleted
 int _new_max_bsa_index(bsa* b);
+
+// sub function to bsa_to_string which concats members of each array to the 
+// overall string
+void _concat_to_string(bsa* b, char* str, int rownum);
+
+//sub function to bsa_init: create an empty array
+array* _array_init(int size);
+
+//sub function to bsa_set: set a[array_index] to d;
+bool _array_set(array* a, int d, int array_index);

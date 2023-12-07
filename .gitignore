@@ -5,3 +5,10 @@ isfactorial
 sieve
 *_s
 *_v
+*_prof
+gmon.out
+*.zip
+extdriverbsa
+extfibmemo
+extisfactorial
+extsieve
