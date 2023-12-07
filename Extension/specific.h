@@ -22,6 +22,7 @@ struct tree_meta {
     int n_assigned;
 };
 
+// binary tree structure
 struct tree {
     int data;
     int index;

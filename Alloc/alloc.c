@@ -149,7 +149,6 @@ bool bsa_tostring(bsa* b, char* str)
     if(!b || !str){
         return false;
     }
-    //make input string empty
     strcpy(str, "");
     int rownum = _get_rownum(b->max_index);
 
@@ -227,9 +226,9 @@ bool _array_free(array* a)
 int _new_max_bsa_index(bsa* b)
 {
     
-    int max_index = -1;
+    int max_index = NULL_MAX_INDX;
 
-    for(int i = BSA_ROWS-1; i >= 0 && max_index == -1; i--){
+    for(int i = BSA_ROWS-1; i >= 0 && max_index == NULL_MAX_INDX; i--){
         if(b->elements_exist[i]){
             max_index = b->p[i]->max_array_index;
             max_index += b->first_index[i];
@@ -262,7 +261,6 @@ void bsa_foreach(void (*func)(int* p, int* n), bsa* b, int* acc)
                 }
             }
         }
-        
     }
 }
 

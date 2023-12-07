@@ -103,7 +103,8 @@ bool bsa_set(bsa* b, int indx, int d)
     }
     int array_index = _get_array_index(indx, b, rownum);
 
-    b->p[rownum]->top = _tree_set(b->p[rownum]->top, d, array_index, &b->p[rownum]->n_assigned);
+    b->p[rownum]->top = _tree_set(b->p[rownum]->top, d, array_index,
+                                     &b->p[rownum]->n_assigned);
     b->p[rownum]->n_assigned++;
 
     if(b->p[rownum]->max_array_index < array_index){
@@ -140,7 +141,7 @@ tree_meta* _tree_init(void)
     tree_meta* tm;
 
     tm = (tree_meta*)_neill_calloc(1, sizeof(tree_meta));
-    tm->max_array_index = -1;
+    tm->max_array_index = NULL_MAX_INDX;
     tm->n_assigned = 0;
 
     return tm;
@@ -222,7 +223,7 @@ bool bsa_delete(bsa* b, int indx)
     b->p[rownum]->top = _tree_delete(b->p[rownum]->top, array_index, &deleted);
 
     if(deleted){
-        b->p[rownum]->n_assigned += -1;
+        b->p[rownum]->n_assigned--;
     }
 
     if(array_index == b->p[rownum]->max_array_index && 
@@ -254,7 +255,7 @@ int _new_max_array_index(tree* t)
 int _new_max_bsa_index(bsa* b)
 {
     
-    int max_index = -1;
+    int max_index = NULL_MAX_INDX;
 
     for(int i = BSA_ROWS-1; i >= 0 && max_index == -1; i--){
         if(b->elements_exist[i]){
