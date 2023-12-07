@@ -82,24 +82,23 @@ extisfactorial_v: bsa.h Extension/specific.h Extension/extension.c isfactorial.c
 	$(CC) isfactorial.c Extension/extension.c -o extisfactorial_v -I./Extension $(VALGRIND)
 
 run: driverbsa fibmemo sieve isfactorial extfibmemo
-	./driverbsa
-	./isfactorial
-	./fibmemo
-	./sieve
-	#./extfibmemo
+	time ./driverbsa
+	time ./fibmemo
+	time ./sieve
+	time ./isfactorial
 
 run_s: driverbsa_s fibmemo_s sieve_s isfactorial_s # extfibmemo_s
 	./driverbsa_s
-	./isfactorial_s
 	./fibmemo_s
 	./sieve_s
+	./isfactorial_s
 	#./extfibmemo_s
 
 run_ext: extdriverbsa extfibmemo extsieve extisfactorial
-	./extdriverbsa
-	./extfibmemo
-	./extsieve
-	./extisfactorial
+	time ./extdriverbsa
+	time ./extfibmemo
+	time ./extsieve
+	time ./extisfactorial
 
 clean:
 	rm -f driverbsa_s driverbsa fibmemo extfibmemo_s isfactorial sieve_s
