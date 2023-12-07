@@ -72,6 +72,9 @@ extsieve_s: bsa.h Extension/specific.h Extension/extension.c sieve.c
 extisfactorial: bsa.h Extension/specific.h Extension/extension.c isfactorial.c
 	$(CC) isfactorial.c Extension/extension.c -o extisfactorial -I./Extension $(PRODUCTION)
 
+extisfactorial_s: bsa.h Extension/specific.h Extension/extension.c isfactorial.c
+	$(CC) isfactorial.c Extension/extension.c -o extisfactorial_s -I./Extension $(SANITIZE)
+
 run: driverbsa fibmemo sieve isfactorial extfibmemo
 	./driverbsa
 	./isfactorial

@@ -17,8 +17,9 @@ bsa* bsa_init(void)
             b->first_index[i] = (1 << i) - FIRST_INDX_ADJUST;
             b->last_index[i] = (1 << (i+1)) - LAST_INDX_ADJUST;
         }
-        b->max_index = NULL_MAX_INDX;
     }
+
+    b->max_index = NULL_MAX_INDX;
 
     return b;
 }
@@ -143,7 +144,6 @@ tree_meta* _tree_init(void)
     tm->n_assigned = 0;
 
     return tm;
-
 }
 
 tree* _tree_set(tree* t, int d, int array_index, int* n_assigned)
@@ -248,7 +248,6 @@ int _new_max_array_index(tree* t)
         t = t->right;
         max = t->index;
     }
-    printf("%i\n", max);
     return max;
 }
 
@@ -286,7 +285,7 @@ tree* _tree_delete(tree* t, int array_index, bool *deleted)
         temp = t->left;
         free(t);
         *deleted = true;
-        return t;
+        return temp;
     }else if(!t->left){
         temp = t->right;
         free(t);

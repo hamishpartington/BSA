@@ -18,8 +18,9 @@ bsa* bsa_init(void)
             b->last_index[i] = (1 << (i+1)) - LAST_INDX_ADJUST;
         }
         b->array_size[i] = b->last_index[i] - b->first_index[i] + 1;
-        b->max_index = NULL_MAX_INDX;
     }
+
+    b->max_index = NULL_MAX_INDX;
 
     return b;
 }
