@@ -8,3 +8,7 @@ sieve
 *_prof
 gmon.out
 *.zip
+extdriverbsa
+extfibmemo
+extisfactorial
+extsieve
