@@ -297,7 +297,7 @@ tree* _tree_delete(tree* t, int array_index, bool *deleted)
         *deleted = true;
         while(child->left){
             parent = child;
-            child = parent->left;
+            child = child->left;
         }
         if(parent != t){
             parent->left = child->right;
@@ -328,9 +328,9 @@ void _tree_foreach(void (*func)(int* p, int* n), tree* t, int* acc)
         return;
     }
     _tree_foreach(func, t->left,  acc);
+    func(&t->data, acc);
     _tree_foreach(func, t->right, acc);
 
-    func(&t->data, acc);
 }
 
 void test(void)

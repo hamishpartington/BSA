@@ -14,6 +14,9 @@ driverbsa_s: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
 extdriverbsa_s: bsa.h Extension/specific.h Extension/extension.c extdriver.c
 	$(CC) extdriver.c Extension/extension.c  -o extdriverbsa_s -I./Extension $(SANITIZE)
 
+extdriverbsa: bsa.h Extension/specific.h Extension/extension.c extdriver.c
+	$(CC) extdriver.c Extension/extension.c  -o extdriverbsa -I./Extension $(PRODUCTION)
+
 driverbsa: bsa.h Alloc/specific.h Alloc/alloc.c driver.c
 	$(CC) driver.c Alloc/alloc.c -o driverbsa -I./Alloc $(PRODUCTION)
 
@@ -75,6 +78,9 @@ extisfactorial: bsa.h Extension/specific.h Extension/extension.c isfactorial.c
 extisfactorial_s: bsa.h Extension/specific.h Extension/extension.c isfactorial.c
 	$(CC) isfactorial.c Extension/extension.c -o extisfactorial_s -I./Extension $(SANITIZE)
 
+extisfactorial_v: bsa.h Extension/specific.h Extension/extension.c isfactorial.c
+	$(CC) isfactorial.c Extension/extension.c -o extisfactorial_v -I./Extension $(VALGRIND)
+
 run: driverbsa fibmemo sieve isfactorial extfibmemo
 	./driverbsa
 	./isfactorial
@@ -88,6 +94,12 @@ run_s: driverbsa_s fibmemo_s sieve_s isfactorial_s # extfibmemo_s
 	./fibmemo_s
 	./sieve_s
 	#./extfibmemo_s
+
+run_ext: extdriverbsa extfibmemo extsieve extisfactorial
+	./extdriverbsa
+	./extfibmemo
+	./extsieve
+	./extisfactorial
 
 clean:
 	rm -f driverbsa_s driverbsa fibmemo extfibmemo_s isfactorial sieve_s
