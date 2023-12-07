@@ -1,4 +1,4 @@
-CC=clang
+CC=gcc
 PG= -fno-inline -pg
 COMMON= -Wall -Wextra -Wfloat-equal -Wpedantic -Wvla -std=c99 -Werror
 DEBUG= -g3
