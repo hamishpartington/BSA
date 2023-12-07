@@ -7,7 +7,7 @@
 rm -fr tmptst
 
 # Create .zip file
-zip -r bsa.zip Alloc # Extension
+zip -r bsa.zip Alloc Extension
 
 # Check there's a .zip file
 if [[ -f bsa.zip ]]
@@ -39,21 +39,21 @@ else
    exit 1
 fi
 
-# if [[ -f Extension/extension.c ]]
-# then
-#    echo "PASS - found Extension/extension.c"
-# else
-#    echo "ERROR - can't find Extension/extension.c in the zip ???"
-#    exit 1
-# fi
+if [[ -f Extension/extension.c ]]
+then
+   echo "PASS - found Extension/extension.c"
+else
+   echo "ERROR - can't find Extension/extension.c in the zip ???"
+   exit 1
+fi
 
-# if [[ -f Extension/specific.h ]]
-# then
-#    echo "PASS - found Extension/specific.h"
-# else
-#    echo "ERROR - can't find Extension/specific.h in the zip ???"
-#    exit 1
-# fi
+if [[ -f Extension/specific.h ]]
+then
+   echo "PASS - found Extension/specific.h"
+else
+   echo "ERROR - can't find Extension/specific.h in the zip ???"
+   exit 1
+fi
 
 #wget Neill's version of other files
 wget https://raw.githubusercontent.com/csnwc/Exercises-In-C/main/Code/Week11/BSA/Makefile

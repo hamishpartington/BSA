@@ -335,7 +335,80 @@ void _tree_foreach(void (*func)(int* p, int* n), tree* t, int* acc)
 
 void test(void)
 {
+    assert(_get_rownum(0) == 0);
+    assert(_get_rownum(2) == 1);
+    assert(_get_rownum(3) == 2);
+    assert(_get_rownum(14) == 3);
+    assert(_get_rownum(31) == 5);
+    assert(_get_rownum(2046) == 10);
+    assert(_get_rownum(2047) == 11);
+
+    bsa* b = bsa_init();
+
+    assert(_get_array_index(0, b, 0) == 0);
+    assert(_get_array_index(14, b, 3) == 7);
+    assert(_get_array_index(2046, b, 10) == 1023);
+    assert(_get_array_index(64, b, 6) == 1);
+    assert(_get_array_index(8191, b, 13) == 0);
+    assert(_get_array_index(8190, b, 12) == 4095);
+
+    assert(!_tree_meta_free(b->p[0]));
+    assert(!_tree_meta_free(b->p[13]));
+
+    bsa_set(b, 0, 5);
+    bsa_set(b, 4, 6);
+    assert(_tree_meta_free(b->p[2]));
+    b->elements_exist[2] = false;
+
+    bsa_set(b, 4, 5);
+    assert(_new_max_array_index(b->p[2]->top) == 1);
+    assert(_new_max_bsa_index(b) == 4);
+    bsa_set(b, 6, 5);
+    assert(_new_max_array_index(b->p[2]->top) == 3);
+    assert(_new_max_bsa_index(b) == 6);
+    bsa_set(b, 100, 5);
+    assert(_new_max_array_index(b->p[6]->top) == 37);
+    assert(_new_max_bsa_index(b) == 100);
+    bsa_set(b, 80, 5);
+    assert(_new_max_array_index(b->p[6]->top) == 37);
+
+    tree_meta* tm = _tree_init();
+    
+    tm->top = _tree_set(tm->top, 40, 500, &tm->n_assigned);
+    tm->n_assigned++;
+    tm->top = _tree_set(tm->top, 23, 5, &tm->n_assigned);
+    tm->n_assigned++;
+    tm->top = _tree_set(tm->top, 34, 777, &tm->n_assigned);
+    tm->n_assigned++;
+    assert(*_tree_get(tm->top, 500) == 40);
+    assert(*_tree_get(tm->top, 5) == 23);
+    assert(*_tree_get(tm->top, 777) == 34);
+
+    int acc = 1;
+    _tree_foreach(times, tm->top, &acc);
+    assert(acc==31280);
+
+    _tree_foreach(twice, tm->top, &acc);
+    assert(*_tree_get(tm->top, 500) == 80);
+    assert(*_tree_get(tm->top, 5) == 46);
+    assert(*_tree_get(tm->top, 777) == 68);
+
+    _tree_meta_free(tm);
+
+    bsa_free(b);
 
 }
 
+//functions from neill for testing foreach
+void times(int* p, int* n)
+{
+   *n = *n * *p;
+}
+
+void twice(int* p, int* n)
+{
+   // Need to use n to switch off warnings :-(
+   *n = 0;
+   *p = *p * 2;
+}
 

@@ -1,9 +1,4 @@
-#include "bsa.h"
-
-#define LISTSTRLEN 1000
-
-void times(int* p, int* n);
-void twice(int* p, int* n);
+#include "Extension/specific.h"
 
 int main(void)
 {
@@ -84,15 +79,4 @@ int main(void)
    return 0;
 }
 
-void times(int* p, int* n)
-{
-   *n = *n * *p;
-}
-
-void twice(int* p, int* n)
-{
-   // Need to use n to switch off warnings :-(
-   *n = 0;
-   *p = *p * 2;
-}
    

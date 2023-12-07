@@ -59,3 +59,7 @@ int _new_max_bsa_index(bsa* b);
 
 void _tree_foreach(void (*func)(int* p, int* n), tree* t, int* acc);
 
+//neills functions for testing foreach
+void times(int* p, int* n);
+void twice(int* p, int* n);
+
