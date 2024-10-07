@@ -1,6 +1,6 @@
 # Binary Sparse Arrays (BSA)
 
-This was the second piece of coursework for my C module for my Computer Science MSc. The task was to implemement a binary sparse array (BSA) abstract data type (ADT).
+This was the second piece of coursework for my C module for my Computer Science MSc. The task was to implement a binary sparse array (BSA) abstract data type (ADT).
 
 ## Extension
 
