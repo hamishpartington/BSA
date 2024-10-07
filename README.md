@@ -26,4 +26,4 @@ indexes, a lot less memory is needed for the extension as it only needs to alloc
 
 ## Mark
 
-I recieved a distinction for this assignment with a mark of 74.
+I received a distinction for this assignment with a mark of 74.
